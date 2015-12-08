@@ -1,0 +1,10 @@
+bottle
+psycopg2
+simplejson
+cherrypy
+click
+pytest
+coverage
+coveralls
+pytest-cov
+Jinja2
