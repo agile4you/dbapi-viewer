@@ -21069,7 +21069,7 @@
 	                        { className: 'app-h2' },
 	                        'Functions'
 	                    ),
-	                    this.props.schema.functions.map(function (f, i) {
+	                    this.props.schema.views.map(function (f, i) {
 	                        return _react2.default.createElement(_Function2.default, { key: i, 'function': f });
 	                    })
 	                );
