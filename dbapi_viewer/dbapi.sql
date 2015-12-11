@@ -2,8 +2,9 @@ SELECT
     n.nspname AS api_namespace,
     'view'::text as api_type,
     c.relname AS api_name,
-    'null'::json as api_params,
-    '/' || n.nspname || '/' || c.relname || '/' api_endpoint
+    '[]'::json as api_params,
+    '/' || n.nspname || '/' || c.relname || '/' api_endpoint,
+    'This view does something' api_desc
 FROM pg_catalog.pg_class c LEFT JOIN pg_catalog.pg_namespace n
     ON (n.oid = c.relnamespace)
 WHERE
@@ -17,7 +18,8 @@ SELECT
     'UDF'::text as api_type,
     proname api_name,
     to_json(proargnames) api_params,
-    '/' || n.nspname || '/' || proname || '/' api_endpoint
+    '/' || n.nspname || '/' || proname || '/' api_endpoint,
+    'This function does something' api_desc
 FROM pg_catalog.pg_namespace n JOIN pg_catalog.pg_proc p
     ON pronamespace = n.oid
 WHERE nspname not in ('public', 'tiger', 'pg_catalog', 'topology', 'information_schema')

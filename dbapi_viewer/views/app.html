@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&subset=latin,greek,greek-ext,latin-ext' rel='stylesheet' type='text/css'>
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: 'Open-Sans';
+            margin: 0
+        }
+        .app-h2 {
+            color: #039be5
+        }
+        .header {
+            position: fixed;
+            width: 100%;
+            background: #40c4ff;
+            height: 8vh;
+            z-index: 9;
+            margin: 0;
+            top: 0;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            -webkit-flex-direction: column;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+        .item {
+            background-color: #dcedc8;
+            padding: 10px;
+            border-radius: 10px;
+            color: black;
+            border: 1px solid;
+            margin-bottom: 10px;
+        }
+
+        .heading {
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<h1 class="header">DBViewer | index</h1>
+<div id="app"></div>
+<script>
+    var APP_DATA = {{ JSDATA }};
+</script>
+<script src="/static/app_bundle.js"></script>
+</body>
+</html>

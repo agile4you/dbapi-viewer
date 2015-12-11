@@ -19,9 +19,9 @@ __all__ = ['index_handler', 'main_handler']
 import bottle
 import pgtools
 import psycopg2.extras
+import simplejson
 from simplejson import JSONDecodeError
 from collections import OrderedDict
-
 
 class InvalidParamsError(Exception):
     """Raises if http request params is invalid.
@@ -62,34 +62,6 @@ def request_to_params(request_context, serializer_cls=pgtools.json):
         raise InvalidParamsError("Invalid Parameter format")
 
 
-def index_handler(db):
-    schema_data = db.api_view
-
-    schema_root = {
-        "namespaces_count": len(set([i['api_namespace'] for i in schema_data])),
-        "schemas": sorted(list(set([i['api_namespace'] for i in schema_data]))),
-        "namespaces": []
-    }
-
-    for schema in set([i['api_namespace'] for i in schema_data]):
-        schema_views = [d for d in schema_data
-                        if d['api_namespace'] == schema and
-                        d['api_type'] == 'view']
-        schema_udf = [d for d in schema_data
-                        if d['api_namespace'] == schema and
-                        d['api_type'] == 'UDF']
-        schema_info = {
-            "name": schema,
-            "functions": [{'name': i['api_name'], 'uri': i['api_endpoint'],
-                     'args': i['api_params']} for i in schema_udf],
-            "views": [{'name': i['api_name'], 'uri': i['api_endpoint'],
-                     'args': i['api_params']} for i in schema_views]
-        }
-        schema_root["namespaces"].append(schema_info)
-
-    return bottle.jinja2_template('index.html', schema_root)
-
-
 def main_handler(schema, action, db):
     """Main Service EntryPoint.
 
@@ -120,3 +92,35 @@ def main_handler(schema, action, db):
 
     return {"Query Execution": sql,
             "results": resp_data}
+
+
+def static_handler(filename):
+    return bottle.static_file(filename, root='static')
+
+
+def dashboard_handler(db):
+    schema_data = db.api_view
+
+    schema_root = {
+        "namespaces_count": len(set([i['api_namespace'] for i in schema_data])),
+        "schemas": sorted(list(set([i['api_namespace'] for i in schema_data]))),
+        "namespaces": []
+    }
+
+    for schema in set([i['api_namespace'] for i in schema_data]):
+        schema_views = [d for d in schema_data
+                        if d['api_namespace'] == schema and
+                        d['api_type'] == 'view']
+        schema_udf = [d for d in schema_data
+                        if d['api_namespace'] == schema and
+                        d['api_type'] == 'UDF']
+        schema_info = {
+            "name": schema,
+            "functions": [{'name': i['api_name'], 'uri': i['api_endpoint'],
+                     'args': i['api_params'] or [], 'desc': i['api_desc']} for i in schema_udf],
+            "views": [{'name': i['api_name'], 'uri': i['api_endpoint'],
+                     'args': i['api_params'] or [], 'desc': i['api_desc']} for i in schema_views]
+        }
+        # schema_info['json_data'] = simplejson.dumps(schema_info)
+        schema_root["namespaces"].append(schema_info)
+    return bottle.jinja2_template('app.html', {'JSDATA': simplejson.dumps(schema_root["namespaces"])})

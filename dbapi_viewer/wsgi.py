@@ -12,7 +12,7 @@ __all__ = ['dbviewer_service']
 
 
 import bottle
-from api import index_handler, main_handler
+from api import index_handler, main_handler, static_handler, dashboard_handler
 
 dbviewer_service = bottle.Bottle()
 
@@ -35,6 +35,8 @@ def strip_path_hook():
 
 
 dbviewer_service.get('/')(index_handler)
+dbviewer_service.get('/dashboard')(dashboard_handler)
+dbviewer_service.get('/static/<filename:path>')(static_handler)
 dbviewer_service.get('/<schema>/<action>')(main_handler)
 dbviewer_service.post('/<schema>/<action>')(main_handler)
 dbviewer_service.hook('before_request')(strip_path_hook)
