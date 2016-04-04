@@ -1,0 +1,2 @@
+docker build -t db-api-viewer .
+docker run -e "CONNSTRING=<yourconnstring>" -d -p <port_to_bind>:8081 --name <container-name> db-api-viewer

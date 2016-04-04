@@ -105,7 +105,7 @@ def deploy_service(postgres, host, port):
     """
     try:
         conn_info = pg_connection(conn_str=postgres)
-    except ConnectionError, e:
+    except ConnectionError as e:
         click.echo('Postgres connection error: {}'.format(e.args))
         return
 

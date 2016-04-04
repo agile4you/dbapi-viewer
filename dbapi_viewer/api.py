@@ -87,7 +87,7 @@ def main_handler(schema, action, db):
         try:
             c.execute(sql)
             resp_data = c.fetchall()
-        except psycopg2.Error, e:
+        except psycopg2.Error as e:
             return {"DBError": e.args}
 
     return {"Query Execution": sql,

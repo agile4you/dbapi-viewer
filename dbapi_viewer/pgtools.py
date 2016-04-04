@@ -80,7 +80,7 @@ class TextArg(BaseFuncArg):
     """Textual Parameters formatter/validator class.
     """
     formatter = "'{}'"
-    param_type = (str, buffer, unicode)
+    param_type = (str,)
 
 
 class BooleanArg(BaseFuncArg):
@@ -118,8 +118,6 @@ FUNC_TYPES = {
     int: NumArg,
     float: NumArg,
     str: TextArg,
-    buffer: TextArg,
-    unicode: TextArg,
     dict: JSONArg,
     bool: BooleanArg,
     list: ArrayArg,
@@ -216,9 +214,9 @@ class PGPlugin(object):
                                          "non-unique keyword).")
 
     def apply(self, callback, context):
-        fn_args = inspect.getargspec(context.callback)[0]
+        fn_args = inspect.signature(context.callback).parameters.get(self.keyword)
 
-        if self.keyword not in fn_args:
+        if not fn_args:
             return callback
 
         def wrapper(*args, **kwargs):
