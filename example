@@ -1,2 +1,5 @@
 docker build -t db-api-viewer .
-docker run -e "CONNSTRING=<yourconnstring>" -d -p <port_to_bind>:8081 --name <container-name> db-api-viewer
+docker run -e "CONNSTRING=<pg_con_string>" -d -p <port_to_bind>:8081
+    --name <container-name>
+ -v <abso_path_dbdapi_viewer>:/dbapi_viewer db-api-viewer
+
